@@ -1,0 +1,17 @@
+{
+    "KPackageStructure": "Plasma/Shell",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "LingmoOS Team"
+            }
+        ],
+        "Description": "Lingmo lock screen for KWin's screen locker (Wayland session)",
+        "Description[pt_BR]": "Tela de bloqueio do Lingmo para o bloqueador do KWin (sessão Wayland)",
+        "Id": "com.lingmo.desktop",
+        "License": "GPL-3.0-or-later",
+        "Name": "Lingmo",
+        "Version": "1.0"
+    },
+    "X-Plasma-APIVersion": "2"
+}

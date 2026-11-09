@@ -1,0 +1,7 @@
+# Lingmo (installed in /usr/share/lingmo/xdg, which only the Lingmo session puts
+# in XDG_CONFIG_DIRS): KWin's screen locker (kscreenlocker_greet) loads its lock
+# screen from this Plasma/Shell package. Without it, it looks for
+# org.kde.plasma.desktop (plasma-desktop, not installed) and falls back to its
+# built-in locker.
+[Shell]
+ShellPackage=com.lingmo.desktop

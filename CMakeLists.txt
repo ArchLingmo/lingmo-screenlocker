@@ -85,3 +85,7 @@ qt_add_translation(QM_FILES ${ts_files_replaced})
 add_custom_target(translations ALL DEPENDS ${QM_FILES} SOURCES ${ts_files_replaced})
 install(FILES ${QM_FILES} DESTINATION /usr/share/lingmo-screenlocker/translations)
 
+
+# Wayland session: the lock screen is KWin's (kscreenlocker_greet) with this
+# Plasma/Shell package; lingmo-screenlocker itself stays the X11 locker.
+add_subdirectory(kscreenlocker-theme)

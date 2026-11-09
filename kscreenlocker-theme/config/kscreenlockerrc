@@ -1,0 +1,7 @@
+# Lingmo (installed in /usr/share/lingmo/xdg, read only by the Lingmo session).
+# KWin's screen locker is the Wayland session's lock screen. Locking when idle is
+# lingmo-powerman's job (Settings > Power, the same setting as on X11), so KWin
+# must not lock on its own as well (that would be a second idle lock).
+[Daemon]
+Autolock=false
+LockOnResume=true

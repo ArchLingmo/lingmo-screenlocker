@@ -19,12 +19,45 @@
 
 #include "application.h"
 #include <QDBusConnection>
+#include <QDBusMessage>
+#include <QProcess>
 #include <QTranslator>
 #include <QLocale>
 #include <QFile>
+#include <QDebug>
+
+// This is the X11 locker. In the Wayland session the lock screen is KWin's
+// (kscreenlocker with the Lingmo theme): a window here would only cover Xwayland.
+// Whatever still starts lingmo-screenlocker there (old shortcuts, scripts) gets
+// KWin's lock instead.
+static bool isWaylandSession()
+{
+    return qEnvironmentVariable("XDG_SESSION_TYPE") == QLatin1String("wayland")
+        || !qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY");
+}
+
+static int lockWithKWin(int argc, char *argv[])
+{
+    QCoreApplication app(argc, argv);
+
+    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.ScreenSaver"),
+                                                          QStringLiteral("/ScreenSaver"),
+                                                          QStringLiteral("org.freedesktop.ScreenSaver"),
+                                                          QStringLiteral("Lock"));
+    // KWin answers once the lock screen is up
+    const QDBusMessage reply = QDBusConnection::sessionBus().call(message, QDBus::Block, 10000);
+    if (reply.type() == QDBusMessage::ReplyMessage)
+        return 0;
+
+    qWarning() << "org.freedesktop.ScreenSaver.Lock failed:" << reply.errorMessage() << "- trying loginctl lock-session";
+    return QProcess::execute(QStringLiteral("loginctl"), {QStringLiteral("lock-session")}) == 0 ? 0 : 1;
+}
 
 int main(int argc, char *argv[])
 {
+    if (isWaylandSession())
+        return lockWithKWin(argc, argv);
+
     Application app(argc, argv);
 
     if (!QDBusConnection::sessionBus().registerService("com.lingmo.ScreenLocker")) {
